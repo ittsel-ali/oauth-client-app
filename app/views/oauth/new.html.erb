@@ -1,0 +1,8 @@
+<h1>Campaign Dashboard App</h1>
+
+
+<%= form_with url: auth_oauth_index_url, method: :post, style: 'text-align: center;' do |form| %>
+  <%= form.label :code_verifier %>
+  <%= form.text_field :code_verifier, value: SecureRandom.hex, readonly: true,size: "30" %>
+  <%= form.submit "Sign in from Trader" %>
+<% end %>
