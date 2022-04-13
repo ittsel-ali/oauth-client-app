@@ -1,3 +1,19 @@
 <h1>Campaign Dashboard App</h1>
-
 <b>JWT Token Received:</b> <span style="color: red;"><%= @token.token %></span>
+</br>
+</br>
+<b>JWT Token Payload:</b> <span style="color: green;"><pre><%= JSON.pretty_generate(@token_payload) %></pre></span>
+</br>
+<b>JWT Refresh Token:</b> <span style="color: blue;"><%= @token.refresh_token %></span>
+</br>
+
+<%= form_with url: get_campaign_info_oauth_index_url, method: :post, style: 'text-align: center;' do |form| %>
+  <%= form.text_field :token, value: @token.token, hidden: true, size: "30" %>
+  <%= form.submit "Get user campaigns from Trader using JWT token" %>
+<% end %>
+
+
+<%= form_with url: refresh_token_oauth_index_url, method: :post, style: 'text-align: center;' do |form| %>
+  <%= form.text_field :refresh_token, value: @token.refresh_token, hidden: true, size: "30" %>
+  <%= form.submit "Refresh token!" %>
+<% end %>

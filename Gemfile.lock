@@ -228,6 +228,7 @@ DEPENDENCIES
   capybara (>= 3.26)
   dotenv-rails
   jbuilder (~> 2.7)
+  jwt
   listen (~> 3.3)
   oauth2
   puma (~> 5.0)

@@ -22,7 +22,38 @@ class OauthController < ApplicationController
     # Step 3: Backend call (2nd handshake) to Auth server to get access_token (jwt), additional request params include `code` received at Step 2
     # and `code_verifier` which will be verified by the auth server
     @token = @client.auth_code.get_token(params[:code], redirect_uri: ENV['APP_CALLBACK_URI'], code_verifier: session[:code_verifier])
+    @token_payload = JWT.decode @token.token, nil, false
   end
+
+  def refresh_token
+    url = URI("http://localhost:3000/oauth/token")
+
+    http = Net::HTTP.new(url.host, url.port)
+
+    request = Net::HTTP::Post.new(url)
+    request["content-type"] = 'application/x-www-form-urlencoded'
+    request["cache-control"] = 'no-cache'
+    request.body = "grant_type=refresh_token&refresh_token=#{params[:refresh_token]}&client_id=#{ENV['APP_ID']}&client_secret=#{ENV['APP_SECRET']}"
+
+    response = http.request(request)
+    @data = response.read_body
+  end
+
+  def get_campaign_info
+    # URI of trader server
+    url = URI("http://localhost:3000/api/graphql")
+
+    http = Net::HTTP.new(url.host, url.port)
+
+    request = Net::HTTP::Post.new(url)
+    request["authorization"] = "Bearer #{params[:token]}"
+    request["content-type"] = 'application/json'
+
+    # GraphQL query string
+    request.body = grapqhl_query
+    response = http.request(request)
+    @data = response.read_body
+  end 
 
   private
 
@@ -34,4 +65,30 @@ class OauthController < ApplicationController
   def permit_params
     params.permit!
   end
+
+  def grapqhl_query
+    "{     \"operationName\":\"GetCampaigns\",     \"variables\":{},     
+      \"query\":
+        \"query GetCampaigns 
+          {\ 
+            campaigns 
+            { 
+              data 
+              {
+                id
+                name
+                state
+                life_stage
+                start_at
+                end_at
+                bid_tactic
+              }  
+              __typename\ 
+            }
+          \\n}
+        \\n\"   
+      }"
+  end
 end
+
+
