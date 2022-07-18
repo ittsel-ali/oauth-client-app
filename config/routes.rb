@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       collection do
         post :auth
         get :callback
+        get :continue_callback
         post :get_campaign_info
         post :refresh_token
       end
