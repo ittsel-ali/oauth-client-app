@@ -35,7 +35,7 @@ class OauthController < ApplicationController
 
 
   def refresh_token
-    url = URI("http://localhost:3000/oauth/token")
+    url = URI(ENV['AUTH_SERVER_URL'])
 
     http = Net::HTTP.new(url.host, url.port)
 
@@ -50,7 +50,7 @@ class OauthController < ApplicationController
 
   def get_campaign_info
     # URI of trader server
-    url = URI("http://localhost:3000/api/graphql")
+    url = URI(ENV['AUTH_SERVER_URL'])
 
     http = Net::HTTP.new(url.host, url.port)
 
