@@ -1,0 +1,87 @@
+# Default values for oauth-client-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: adgear-docker.jfrog.io/adgear/oauth-client-app
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: 0.1.0
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: true
+  annotations: 
+    nginx.ingress.kubernetes.io/whitelist-source-range: "169.53.185.77/32,169.53.175.154/32,54.157.84.14/32,52.205.175.72/32,52.86.121.179/32,70.35.215.109/32,162.246.218.202/32,173.231.178.103/32,216.52.31.82/32,216.52.0.216/32,63.251.242.183/32,63.251.242.187/32,162.246.216.28/32,162.246.218.28/32,63.251.242.184/32,52.0.51.13/32,173.231.178.107/32,205.204.71.135/32,34.230.156.253/32,18.213.133.75/32,3.217.196.6/32,52.206.185.90/32,3.87.181.159/32,3.81.194.4/32,3.213.17.203/32,52.201.146.135/32,54.89.105.149/32,52.22.215.68/32,3.213.226.227/32,52.21.64.28/32,162.246.216.202/32,63.124.78.30/32,63.124.79.253/32,34.195.146.191/32,34.194.143.46/32,54.208.242.36/32,14.142.149.66/32,125.19.181.210/32,210.94.41.89/32,210.94.41.88/32,34.193.63.128/32,52.7.51.233/32,173.245.48.0/32,103.21.244.0/22,103.22.200.0/22,103.31.4.0/22,141.101.64.0/18,108.162.192.0/18,190.93.240.0/20,188.114.96.0/20,197.234.240.0/22,198.41.128.0/17,162.158.0.0/15,104.16.0.0/13,104.24.0.0/14,172.64.0.0/13,131.0.72.0/22,186.15.178.35/32,23.62.225.10/32,34.233.164.211/32"
+    kubernetes.io/ingress.class: nginx
+    certmanager.k8s.io/cluster-issuer: vault-issuer
+    cert-manager.io/cluster-issuer: vault-issuer
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: oauth-client-app.use1-dev.k8s.adgear.com
+      paths:
+      - path: /
+        backend:
+          serviceName: oauth-client-app
+          servicePort: 80
+  tls: 
+    - secretName: oauth-client-app-tls
+      hosts:
+        - oauth-client-app.use1-dev.k8s.adgear.com
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
