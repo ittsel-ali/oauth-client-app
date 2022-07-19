@@ -35,9 +35,10 @@ class OauthController < ApplicationController
 
 
   def refresh_token
-    url = URI(ENV['AUTH_SERVER_URL'])
+    url = URI(ENV['AUTH_SERVER_URL']+"/oauth/token")
 
     http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true if url.instance_of? URI::HTTPS
 
     request = Net::HTTP::Post.new(url)
     request["content-type"] = 'application/x-www-form-urlencoded'
@@ -50,9 +51,10 @@ class OauthController < ApplicationController
 
   def get_campaign_info
     # URI of trader server
-    url = URI(ENV['AUTH_SERVER_URL'])
+    url = URI(ENV['AUTH_SERVER_URL']+"/api/graphql")
 
     http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true if url.instance_of? URI::HTTPS
 
     request = Net::HTTP::Post.new(url)
     request["authorization"] = "Bearer #{params[:token]}"
