@@ -1,7 +1,26 @@
-<%= form_with url: continue_callback_oauth_index_url, method: :get, style: 'text-align: center;' do |form| %>
-  <%= form.label "code " %>
-  <%= form.text_field :code, value: params[:code], readonly: true,size: "60" %>
-  </br>
-  </br>
-  <%= form.submit "Continue" %>
+<div class="text-center pt-1 mb-5 pb-1">
+  <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"><h1>Successfully Logged In</h1></button>
+</div>
+<b>JWT Token Received:</b> <span style="color: red;"><%= @token.token %></span>
+</br>
+</br>
+<b>JWT Token Payload:</b> <span style="color: green;"><pre><%= JSON.pretty_generate(@token_payload[0]) %></pre></span>
+</br>
+<b>JWT Token Header:</b> <span style="color: green;"><pre><%= JSON.pretty_generate(@token_payload[1]) %></pre></span>
+</br>
+<b>JWT Refresh Token:</b> <span style="color: blue;"><%= @token.refresh_token %></span>
+</br>
+</br>
+</br>
+
+<%= form_with url: get_campaign_info_oauth_index_url, method: :post, style: 'text-align: center;' do |form| %>
+  <%= form.text_field :token, value: @token.token, hidden: true, size: "30" %>
+  
+  <div class="text-center pt-1 mb-5 pb-1">
+
+    <%= form.submit "Get my campaigns from Samsung DSP", class: "btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" %>
+  </div>
+
 <% end %>
+
+

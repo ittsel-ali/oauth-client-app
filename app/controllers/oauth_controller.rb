@@ -8,7 +8,7 @@ class OauthController < ApplicationController
 
   def auth
     # Step 1: Generate Authentication URl
-    auth_url = @client.auth_code.authorize_url(redirect_uri: ENV['APP_CALLBACK_URI'], scope: "read write", code_challenge: params[:code_challenge], code_challenge_method: "S256")
+    auth_url = @client.auth_code.authorize_url(redirect_uri: ENV['APP_CALLBACK_URI'], scope: "read", code_challenge: params[:code_challenge], code_challenge_method: "S256")
     
     ####### resulting url #######
     # http://localhost:3000/oauth/authorize?client_id=uY9cxCR_KBcH7PGaCVFkPZ8hhVqv3DdFd5g0ciLZ6dI
@@ -23,6 +23,10 @@ class OauthController < ApplicationController
   end
 
   def callback
+    # Step 3: Backend call (2nd handshake) to Auth server to get access_token (jwt), additional request params include `code` received at Step 2
+    # and `code_verifier` which will be verified by the auth server
+    @token = @client.auth_code.get_token(params[:code], redirect_uri: ENV['APP_CALLBACK_URI'], code_verifier: session[:code_verifier])
+    @token_payload = JWT.decode @token.token, nil, false
   end
 
   def continue_callback

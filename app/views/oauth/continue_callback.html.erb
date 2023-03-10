@@ -1,4 +1,6 @@
-<h1>Client App (yelp.com)</h1>
+<div class="text-center pt-1 mb-5 pb-1">
+  <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"><h1>Successfully Logged In</h1></button>
+</div>
 <b>JWT Token Received:</b> <span style="color: red;"><%= @token.token %></span>
 </br>
 </br>
@@ -8,14 +10,17 @@
 </br>
 <b>JWT Refresh Token:</b> <span style="color: blue;"><%= @token.refresh_token %></span>
 </br>
+</br>
+</br>
 
 <%= form_with url: get_campaign_info_oauth_index_url, method: :post, style: 'text-align: center;' do |form| %>
   <%= form.text_field :token, value: @token.token, hidden: true, size: "30" %>
-  <%= form.submit "Get user campaigns from Trader using JWT token" %>
+  
+  <div class="text-center pt-1 mb-5 pb-1">
+
+    <%= form.submit "Get my campaigns from Samsung DSP", class: "btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" %>
+  </div>
+
 <% end %>
 
 
-<%= form_with url: refresh_token_oauth_index_url, method: :post, style: 'text-align: center;' do |form| %>
-  <%= form.text_field :refresh_token, value: @token.refresh_token, hidden: true, size: "30" %>
-  <%= form.submit "Refresh token!" %>
-<% end %>
